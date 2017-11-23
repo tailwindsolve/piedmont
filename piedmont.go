@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-	"gonode"
-	"json"
+	gonode "github.com/jgranstrom/gonodepkg"
+	json "github.com/jgranstrom/go-simplejson"
 	"github.com/gopherjs/gopherjs/js"
 	
 )
