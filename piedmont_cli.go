@@ -12,10 +12,6 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-	gonode "github.com/jgranstrom/gonodepkg"
-	json "github.com/jgranstrom/go-simplejson"
-	"github.com/gopherjs/gopherjs/js"
-	
 )
 
 // Prefetch file header struct
@@ -41,7 +37,7 @@ type FileInfo17 struct {
 	VolumesCount          uint32
 	VolumesInfoSize       uint32
 	LastRunTime           time.Time
-	_unk2                 []byte
+	_unk2                 []byte //unknown_data
 	RunCount              uint32
 	_unk3                 uint32
 }
@@ -168,16 +164,11 @@ const volinfo23_entry int = 104
 const volinfo30_entry int = 96
 
 func main() {
-	js.Module.Get("exports").Set("pet", map[string]interface{}{
-	  "New": ,
-	}
+
 	// var pfData []PfSection
 	// path := "C:/Users/tailwindfor/test_data/"
 	// get path from a config file or some sort of fixed location
 
-	//this is all moved out into the function that main calls for the nodejs wrapper
-	//the path needs to be more flexible to be selected from the node-based interface
-	//ensure the node libraries are properly imported to ensure a proper connection
 	path := "C:/Users/tailwindfor/test_data/XPPro"
 	pf_file_paths := getPrefetchFiles(path)
 	var pf_header = PrefetchHeader{}
@@ -511,44 +502,9 @@ func formatFileNames(fnames string) []string {
 	return fmat_fnames
 }
 
-//Format a Win32 timstamp into human readable
+//Format a Win32 timstamp into UTC
 func formatWin32FileTime(ft uint64) time.Time {
 	diff2unix := int64(11644473600000 * 10000)
 	unixtime := int64(ft) - diff2unix
 	return time.Unix(unixtime/10000000, 0).UTC()
 }
-
-//Potentially usable code at a later point or in a different project
-// func (hdr *PrefetchHeader) MarshalJSON() []byte {
-// 	type Alias PrefetchHeader
-// 	j, err := json.MarshalIndent(&struct {
-// 		Signature string
-// 		Exename   string
-// 		Version   int
-// 		Filesize  uint32
-// 		Hash      string
-// 		*Alias
-// 	}{
-// 		Signature: string(hdr.Signature[:]),
-// 		Exename:   formatExeName(hdr.Exename[:]),
-// 		Version:   formatVersion(hdr.Version[:]),
-// 		//Filesize:  formatFileSize(hdr.Filesize[:]),
-// 		Filesize: binary.LittleEndian.Uint32(hdr.Filesize[:]),
-// 		Hash:     hex.EncodeToString(hdr.Hash[:]),
-// 		Alias:    (*Alias)(hdr),
-// 	}, "", "    ")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	return j
-// }
-
-// func unMarshalJSON(data []byte) error {
-// 	var headers []PrefetchHeader
-// 	s, err := json.Unmarshal(data, &headers)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	fmt.Println(string(s))
-// 	return nil
-// }
