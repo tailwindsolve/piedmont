@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -37,7 +38,7 @@ type FileInfo17 struct {
 	VolumesCount          uint32
 	VolumesInfoSize       uint32
 	LastRunTime           time.Time
-	_unk2                 []byte //unknown_data
+	_unk2                 []byte
 	RunCount              uint32
 	_unk3                 uint32
 }
@@ -165,12 +166,23 @@ const volinfo30_entry int = 96
 
 func main() {
 
+	flag.Usage = func() {
+		fmt.Printf("Usage of %s:\n", os.Args[0])
+		fmt.Printf("    piedmont-cli [dir_of_pfs]\n")
+		flag.PrintDefaults()
+	}
+
+	dirPtr := flag.String("dir", "none", "The directory containing prefetch files")
+
+	flag.Parse()
+
 	// var pfData []PfSection
 	// path := "C:/Users/tailwindfor/test_data/"
 	// get path from a config file or some sort of fixed location
 
-	path := "C:/Users/tailwindfor/test_data/XPPro"
+	path := *dirPtr
 	pf_file_paths := getPrefetchFiles(path)
+	fmt.Println(path)
 	var pf_header = PrefetchHeader{}
 	var pf_finfo17 = FileInfo17{}
 	// var pf_finfo23 = FileInfo23{}
